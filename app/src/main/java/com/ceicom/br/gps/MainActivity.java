@@ -79,11 +79,14 @@ public class MainActivity extends AppCompatActivity {
         showDialog();
         final DBController crud = new DBController(getBaseContext());
 
-        if (atualizacao == "0" || atualizacao == null){
-            Toast.makeText(this, "sem dados no BD", Toast.LENGTH_LONG).show();
+        if (atualizacao == "" || atualizacao.isEmpty()){
+            txResposta.setText("sem dados no BD");
             hideDialog();
             return;
         }
+
+        atualizacao.concat("1");
+
         JsonArrayRequest jsonReq = new JsonArrayRequest(ANUNCIANTES_JSON + atualizacao, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
 
-                        txResposta.setText(cont + " " + jsonResposta);
+                        txResposta.setText("+ " + cont + " " + jsonResposta);
                     }else {
                         txResposta.setText("Nenhum cadastro novo foi inserido");
                     }
@@ -169,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         txResposta.setText("Última atualização " + ts);
         hideDialog();
 
-        return ts + 1;
+        return ts;
     }
 
     public void atualizarCadastros(){
