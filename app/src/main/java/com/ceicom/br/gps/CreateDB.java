@@ -45,7 +45,7 @@ public class CreateDB extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db){
         String sql = "CREATE TABLE "+ TABELA + "("
-                + id + " INTEGER PRIMARY KEY AUTOINCREMENT NOTNULL UNIQUE,"
+                + id + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,"
                 + registroId + " integer,"
                 + planoID + " integer,"
                 + setorID + " integer,"

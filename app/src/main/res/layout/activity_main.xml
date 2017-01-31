@@ -11,40 +11,58 @@
     tools:context="com.ceicom.br.gps.MainActivity">
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txResposta"
-        android:layout_below="@+id/btnRequest"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="53dp" />
-
     <Button
         android:text="VER LISTA DB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="69dp"
         android:id="@+id/btnLista"
-        android:onClick="irParaLista"/>
+        android:onClick="irParaLista"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
 
     <Button
-        android:text="REQUISIÇÃO WS"
-        android:layout_width="match_parent"
+        android:text="Last Time Stamp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnRequest"
-        android:layout_marginTop="41dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/btnLastTimeStamp"
+        android:onClick="lastTimeStamp"
+        android:layout_alignBaseline="@+id/btnLista"
+        android:layout_alignBottom="@+id/btnLista"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:text="LIMPAR TABELA"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/button"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:onClick="limpaTabela"/>
+        android:onClick="limpaTabela"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="REQUISIÇÃO WS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnRequest"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txResposta"
+        android:layout_marginTop="96dp"
+        android:layout_below="@+id/btnRequest"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Atualizar Cadastros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCadastros"
+        android:layout_below="@+id/btnRequest"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
 
 </RelativeLayout>

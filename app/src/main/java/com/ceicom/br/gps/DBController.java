@@ -55,7 +55,7 @@ public class DBController {
         if(result == 1)
             return "Erro ao inserir registro";
         else
-            return  "Registro inserido com sucesso";
+            return  "Registro(s) inserido(s) com sucesso";
     }
 
     public Cursor loadDados(){
@@ -68,9 +68,20 @@ public class DBController {
         if(cursor == null){
             cursor.moveToFirst();
         }
-        //db.close();
         return cursor;
+    }
 
+    public int lastTimeStamp() {
+        Cursor cursor;
+        int retorno;
+
+        db = banco.getReadableDatabase();
+        cursor = db.rawQuery("SELECT MAX(" + banco.atualizacao + ") AS " + banco.atualizacao + " FROM " + banco.TABELA, null);
+
+        cursor.moveToFirst();
+        retorno = cursor.getInt(cursor.getColumnIndex(banco.atualizacao));
+
+        return retorno;
     }
 
     public String limpaTabela(String tabela) {

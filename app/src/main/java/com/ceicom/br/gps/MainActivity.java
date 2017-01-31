@@ -23,11 +23,11 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String ANUNCIANTES_JSON = "http://api.guiaparanasudoeste.com.br/sincronizar/anunciantes/pqsHfZlP7RCXfZ5plSoVDq3xxTwUMx/1485255954";
+    private static final String ANUNCIANTES_JSON = "http://api.guiaparanasudoeste.com.br/sincronizar/anunciantes/pqsHfZlP7RCXfZ5plSoVDq3xxTwUMx/";
 
     private static String TAG = MainActivity.class.getSimpleName();
 
-    private Button btnRequest;
+    private Button btnRequest, btnTimeStamp, btnAtualizarCadastros;
 
     private ProgressDialog dialog;
 
@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnRequest = (Button) findViewById(R.id.btnRequest);
+        btnTimeStamp = (Button) findViewById(R.id.btnLastTimeStamp);
+        btnAtualizarCadastros = (Button) findViewById(R.id.btnCadastros);
+
         txResposta = (TextView) findViewById(R.id.txResposta);
 
         dialog = new ProgressDialog(this);
@@ -52,59 +55,83 @@ public class MainActivity extends AppCompatActivity {
         btnRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestObjetc();
+                requestObjetc("1485255954");
+            }
+        });
+
+        btnTimeStamp.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                getLastTimeStamp();
+            }
+        });
+
+        btnAtualizarCadastros.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                atualizarCadastros();
             }
         });
     }
 
-    private void requestObjetc(){
+    private void requestObjetc(String atualizacao){
 
         showDialog();
-
         final DBController crud = new DBController(getBaseContext());
 
-        JsonArrayRequest jsonReq = new JsonArrayRequest(ANUNCIANTES_JSON, new Response.Listener<JSONArray>() {
+        if (atualizacao == "0" || atualizacao == null){
+            Toast.makeText(this, "sem dados no BD", Toast.LENGTH_LONG).show();
+            hideDialog();
+            return;
+        }
+        JsonArrayRequest jsonReq = new JsonArrayRequest(ANUNCIANTES_JSON + atualizacao, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 jsonResposta = "";
+                int cont = 0;
                 try {
-                    for (int i = 0; i < response.length(); i++){
-                        JSONObject obj = (JSONObject) response.get(i);
+                    if (response.length() > 0){
+                        for (int i = 0; i < response.length(); i++){
+                            JSONObject obj = (JSONObject) response.get(i);
 
-                        anunciante.setRegistroId(obj.getInt("registroID"));
-                        anunciante.setPlanoID(obj.getInt("planoID"));
-                        anunciante.setSetorID(obj.getInt("setorID"));
-                        anunciante.setTipoID(obj.getInt("tipoID"));
-                        anunciante.setRazaoSocial(obj.getString("razaoSocial"));
-                        anunciante.setNome(obj.getString("nome"));
-                        anunciante.setCep(obj.getString("cep"));
-                        anunciante.setBairro(obj.getString("bairro"));
-                        anunciante.setEnredeco(obj.getString("endereco"));
-                        anunciante.setEstado(obj.getString("estado"));
-                        anunciante.setCidade(obj.getString("cidade"));
-                        anunciante.setCidadeNormatizada(obj.getString("cidadeNormatizada"));
-                        anunciante.setNumero(obj.getString("numero"));
-                        anunciante.setTelefone1(obj.getString("telefone1"));
-                        anunciante.setTelefone2(obj.getString("telefone2"));
-                        anunciante.setCelular(obj.getString("celular"));
-                        anunciante.setEmail(obj.getString("email"));
-                        anunciante.setSite(obj.getString("site"));
-                        anunciante.setFacebook(obj.getString("facebook"));
-                        anunciante.setTwitter(obj.getString("twitter"));
-                        anunciante.setPalavrasChaves(obj.getString("palavrasChaves"));
-                        anunciante.setAtivo(obj.getBoolean("ativo"));
-                        anunciante.setAtualizacao(obj.getInt("atualizacao"));
+                            anunciante.setRegistroId(obj.getInt("registroID"));
+                            anunciante.setPlanoID(obj.getInt("planoID"));
+                            anunciante.setSetorID(obj.getInt("setorID"));
+                            anunciante.setTipoID(obj.getInt("tipoID"));
+                            anunciante.setRazaoSocial(obj.getString("razaoSocial"));
+                            anunciante.setNome(obj.getString("nome"));
+                            anunciante.setCep(obj.getString("cep"));
+                            anunciante.setBairro(obj.getString("bairro"));
+                            anunciante.setEnredeco(obj.getString("endereco"));
+                            anunciante.setEstado(obj.getString("estado"));
+                            anunciante.setCidade(obj.getString("cidade"));
+                            anunciante.setCidadeNormatizada(obj.getString("cidadeNormatizada"));
+                            anunciante.setNumero(obj.getString("numero"));
+                            anunciante.setTelefone1(obj.getString("telefone1"));
+                            anunciante.setTelefone2(obj.getString("telefone2"));
+                            anunciante.setCelular(obj.getString("celular"));
+                            anunciante.setEmail(obj.getString("email"));
+                            anunciante.setSite(obj.getString("site"));
+                            anunciante.setFacebook(obj.getString("facebook"));
+                            anunciante.setTwitter(obj.getString("twitter"));
+                            anunciante.setPalavrasChaves(obj.getString("palavrasChaves"));
+                            anunciante.setAtivo(obj.getBoolean("ativo"));
+                            anunciante.setAtualizacao(obj.getInt("atualizacao"));
 
-                        try {
-                            jsonResposta = crud.insertDados(anunciante);
-                        }catch (Exception e){
-                            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+                            try {
+                                jsonResposta = crud.insertDados(anunciante);
+                                cont++;
+                            }catch (Exception e){
+                                Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+                            }
                         }
+
+                        txResposta.setText(cont + " " + jsonResposta);
+                    }else {
+                        txResposta.setText("Nenhum cadastro novo foi inserido");
                     }
 
-                    txResposta.setText(jsonResposta);
                     hideDialog();
-
                 } catch (JSONException e){
                     e.printStackTrace();
                 }
@@ -133,6 +160,21 @@ public class MainActivity extends AppCompatActivity {
     public void irParaLista(View view){
         Intent lista = new Intent(this, ListaActivity.class);
         startActivity(lista);
+    }
+
+    public int getLastTimeStamp(){
+        showDialog();
+        DBController crud = new DBController(getBaseContext());
+        int ts = crud.lastTimeStamp();
+        txResposta.setText("Última atualização " + ts);
+        hideDialog();
+
+        return ts + 1;
+    }
+
+    public void atualizarCadastros(){
+        int cod = getLastTimeStamp();
+        requestObjetc(cod + "");
     }
 
     public void limpaTabela(View view){
